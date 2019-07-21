@@ -2,7 +2,7 @@
 python common util
 
 ### Specifics
-- current version: >=0.0.40
+- current version: >=0.0.43
 
 ### download
 - pip install py-common-util
