@@ -1,0 +1,44 @@
+#########################
+#国内加速镜像1 $pip3  install --index http://mirrors.sohu.com/python/ torch
+#国内加速镜像2 $pip3  install --index https://pypi.mirrors.ustc.edu.cn/simple/ torch
+#sudo pip install -U allennlp
+#pip3 install -U nltk
+#pip3 install -U jupyter
+#####
+#oracle model server: $pip install graphpipe
+#####
+#pytorch安装方法，在页面配置：https://pytorch.org/
+#pip3 install torch torchvision --index https://pypi.mirrors.ustc.edu.cn/simple/ torch torchvision
+#torch>=1.1.0
+#torchvision>=0.2.2
+#allennlp>=0.6.0
+#####
+###手工安装指定版本：$sudo pip3 install tensorflow-gpu==1.10.0 --index https://pypi.mirrors.ustc.edu.cn/simple/
+#更新到最新版：$sudo pip3 install -U tensorflow-gpu --index https://pypi.mirrors.ustc.edu.cn/simple/
+###手工升级numpy: $sudo pip3 install -U numpy --index https://pypi.mirrors.ustc.edu.cn/simple/
+#########
+###升级: $sudo pip3 install -U h5py
+##升级h5py可解决类似问题：RuntimeWarning: compiletime version 3.5 of module 'tensorflow.python.framework.fast_tensor_util' does not match runtime version 3.6 return f(*args, **kwds)
+#########
+#sudo pip3 install --upgrade jieba gensim
+#########################
+#手工安装 tensorflow-gpu>=1.11.0
+####h5py>=2.8.0(和tensorflow库相关，可以需要的时候再安装)
+#########################
+requests>=2.18.4
+#####[tushare自己增加的####
+#tushare>=1.0.5
+#BeautifulSoup4==4.6.0
+##mysql
+#pymysql
+#sqlalchemy
+##excel
+#xlrd
+#####tushare自己增加的]####
+##cvxpy:凸优化的pthon包
+#cvxpy>=1.0.3
+##nltk有stanford corenlp支持中文
+#nltk>=3.3
+####中文nlp####
+#jieba==0.39
+#gensim>=3.6.0
