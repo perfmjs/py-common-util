@@ -7,6 +7,7 @@ class RingBuffer(deque):
     python的ring buffer高性能封装
     注意：deque性能远高于封装的RingBuffer类，因此应尽量使用原始的deque对象
     为性能考虑，应注释一切代理的方法(i.e. append, get)，程序中应直接使用deque原始支持的方法
+    参考：https://en.wikipedia.org/wiki/Circular_buffer
     # def append(self, x):
         # super().append(x)
     """
