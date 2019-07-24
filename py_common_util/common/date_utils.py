@@ -38,6 +38,11 @@ class DateUtils:
         return DateUtils.to_int(DateUtils.now())
 
     @staticmethod
+    def now_to_str():
+        """当前时间转成string格式输出，如：2019-07-24 09:19:09.668136"""
+        return DateUtils.to_str(DateUtils.now(), format="%Y-%m-%d %H:%M:%S.%f")
+
+    @staticmethod
     def calc_duration_seconds(start_time_int, end_time_int):
         """
         :param start_time_int:

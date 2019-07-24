@@ -27,7 +27,7 @@ remote python interpreter path: /home/user/anaconda3/bin/python3
 1. 升级__version__(参考common/version.py)
 2. 查看打包文件清单MANIFEST.in是否包含应该包含的文件
 3. 删除build,dist,py_common_util.egg-info目录
-#4. $ python3 setup.py install (生成build,dist,egg-info目录)
+#4. $python3 setup.py install (生成build,dist,egg-info目录)
 # 创建zip安装包
 #5. 打包 $ python3 setup.py sdist （生成dist,egg-info目录，并install到本机pythonx.x/site-packages/的类库中；也可以在IDEA的其它项目中依赖该项目模块而改动代码不必打包）
 # 或者创建全版本通用的wheel安装包
@@ -74,5 +74,6 @@ stanford-segmenter-3.9.1.jar https://nlp.stanford.edu/software/segmenter.shtml#D
 ./segment.sh pku test.simp.utf8 UTF-8 0
 
 ### feature list
+v0.0.44 增加now_to_str的时间格式输出方法
 v0.0.43 增加ring buffer功能
 v0.0.36 增加request的hooks_exception_callback功能
