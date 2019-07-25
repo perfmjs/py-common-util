@@ -42,3 +42,6 @@ requests>=2.18.4
 ####中文nlp####
 #jieba==0.39
 #gensim>=3.6.0
+############
+#zipline相关的依赖
+#zipline>=1.3.0
