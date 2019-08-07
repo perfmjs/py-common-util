@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 import csv
+import copy
+import math
 
 
 class CommonUtils:
@@ -79,6 +81,7 @@ class CommonUtils:
         s1 = _first_cap_re.sub(r"\1_\2", class_name)
         return _all_cap_re.sub(r"\1_\2", s1).lower()
 
+    @staticmethod
     def print_exec_time(func):
         """
         装饰器：print execution time
@@ -98,4 +101,26 @@ class CommonUtils:
             print('print_exec_time->func: '+func.__name__+'()' + ', time taken: {:.3f} seconds'.format(time() - before_time))
             return rv
         return decorator_func
+
+    @staticmethod
+    def deepcopy(x, memo=None, _nil=[]):
+        """深拷贝，该方法执行比较耗时间"""
+        return copy.deepcopy(x, memo, _nil)
+
+    @staticmethod
+    def format_number(x, times=1, format_args="0.2f"):
+        """
+        格式化数字输出, e.g. 12.3456-> "12.34"
+        :param x: 数字 e.g. 12.3456
+        :param times: 乘以的倍数，方便%输出
+        :param format_args: e.g. "0.2f" 保留小数点后2位输出
+        :return: "12.34" 如果要to float类型就用: float(format_number(12.3456, 100))
+        """
+        if x is None or math.isnan(x):
+            return "0.00"
+        try:
+            return format(float(x)*times, format_args)
+        except:
+            return str(x)
+
 

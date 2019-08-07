@@ -1,23 +1,31 @@
 # -*- coding: utf-8 -*-
-from contrib_lib.quant.utils.chinese_stock_calendar import ChineseStockCalendar
-from contrib_lib.quant.zipline.default_strategy import DefaultStrategy
+from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
+from py_common_util.zipline.default_strategy import DefaultStrategy
 from py_common_util.common.common_utils import CommonUtils
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 from empyrical import cum_returns, annual_return, sharpe_ratio, max_drawdown, alpha, beta
 import pandas as pd
+from collections import OrderedDict
+from zipline.api import order, record, symbol
 
 
 class DualMovingAverageStrategy(DefaultStrategy):
     """
     参考：https://github.com/quantopian/zipline/blob/master/zipline/examples/dual_moving_average.py
+    https://www.google.com/search?q=zipline+multiple+stocks&rlz=1C5CHFA_enCN643CN643&oq=zipline+multiple+stocks&aqs=chrome..69i57.809j0j9&sourceid=chrome&ie=UTF-8
+    https://groups.google.com/forum/#!topic/zipline/1GFJSyRwd7w
+    https://www.quantopian.com/posts/applying-strategy-to-multiple-stocks-fail
     """
     def __init__(self):
         super().__init__()
 
     def prepare_data(self):
+        """
+        AAPL.csv数据涞源：https://finance.yahoo.com/quote/AAPL/history/
+        :return:
+        """
         super().prepare_data()
-        from collections import OrderedDict
         data = OrderedDict()
         csv_file_local = "/Users/tony/zipline_data_can_delete/AAPL.csv"
         csv_file_remote = "/tony/zipline_local_dataset/AAPL.csv"
@@ -106,8 +114,8 @@ class DualMovingAverageStrategy(DefaultStrategy):
 
     @CommonUtils.print_exec_time
     def run_algorithm(self):
-        data = self.ts.proapi.stock_basic(exchange='', list_status='L', fields='ts_code,symbol,name,area,industry,list_date')
-        self.log.info(data)
+        # data = self.ts.proapi.stock_basic(exchange='', list_status='L', fields='ts_code,symbol,name,area,industry,list_date')
+        # self.log.info(data)
         start_time = self.pandas.Timestamp('2018-01-02 09:31:00', tz='utc')
         end_time = self.pandas.Timestamp('2018-02-04 16:00:00', tz='utc')
         data_frequency = 'minute'

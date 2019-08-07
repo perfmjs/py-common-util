@@ -25,6 +25,33 @@ class AbstractStrategy(with_metaclass(ABCMeta)):
     data['SPY'].to_csv('~/.zipline/data/treasury_curves.csv')  # 手工生成treasury_curves.csv文件
     ...
     ===============
+    ```
+    参考：https://github.com/quantopian/zipline/blob/master/zipline/examples/dual_moving_average.py
+    https://www.google.com/search?q=zipline+multiple+stocks&rlz=1C5CHFA_enCN643CN643&oq=zipline+multiple+stocks&aqs=chrome..69i57.809j0j9&sourceid=chrome&ie=UTF-8
+    https://groups.google.com/forum/#!topic/zipline/1GFJSyRwd7w
+    https://www.quantopian.com/posts/applying-strategy-to-multiple-stocks-fail
+    http://quantfiction.com/2018/08/20/trading-metrics-that-actually-matter/
+    https://github.com/rainx/inside-zipline/blob/master/tradingcalendar/tc.md
+    backtrader实战和工程师思维的选型 http://www.topquant.vip/?p=766
+    https://www.yiibai.com/pandas/python_pandas_statistical_functions.html
+    https://github.com/gbeced/pyalgotrade
+    https://www.zhihu.com/question/30719154
+    https://www.e-learn.cn/en/node/2160872
+    https://0xboz.github.io/blog/how-to-create-custom-zipline-bundles-from-binance-data-part-1/
+    https://0xboz.github.io/blog/how-to-create-custom-zipline-bundles-from-binance-data-part-2/
+    https://github.com/quantopian/empyrical
+    https://github.com/quantopian/pyfolio
+    https://github.com/quantopian/alphalens
+    pyfolio教程2——第一个returns_tear_sheet  https://blog.csdn.net/qtlyx/article/details/88724236
+    https://github.com/marketneutral/alphatools/blob/master/notebooks/research-minimal.ipynb
+    http://pmorissette.github.io/ffn/quick.html
+    https://www.quantopian.com/posts/does-order-target-sid-0-close-a-short-position
+    关于QP的量化三大件：pyFolio，zipline，alphalens：TopQ极宽backtrader课件系列  http://www.topquant.vip/?p=854
+    深入了解zipline回测框架 https://github.com/rainx/inside-zipline
+    1.5 量化技术篇—使用zipline回测  https://www.jianshu.com/p/b6c826300c6e
+    zipline 因子和策略开发代码集 http://www.trader-china.cn/topics/55154
+    AI For Trading:Zipline Pipeline (50)  http://www.digtime.cn/articles/131/ai-for-tradingzipline-pipeline50
+    ```
     """
     @property
     def log(self):
@@ -77,12 +104,12 @@ class AbstractStrategy(with_metaclass(ABCMeta)):
 
     @abstractmethod
     def initialize(self, context):
-        # 启动后需要处理的一次性逻辑
+        # 启动后需要用户干预处理的一次性逻辑
         self.log.info("initialize...")
 
     @abstractmethod
     def before_trading_start(self, context, data):
-        # 每个bar_open之前执行，对日K可选定当天待交易股票，分钟K可以用于初始化数据
+        # 每个bar_open之前执行，对日K可选定当天待交易股票，分钟K在每日盘前可以用于初始化数据
         # self.log.info("before_trading_start...")
         pass
 

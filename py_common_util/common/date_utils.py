@@ -1,4 +1,4 @@
-# coding: utf-8 or # -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 import time
 from datetime import datetime
 import datetime as dt
@@ -23,7 +23,7 @@ class DateUtils:
     def to_str(date_time, format="%Y%m%d%H%M%S"):
         """
         e.g. DateUtils.to_str(DateUtils.now(), format="%Y-%m-%d %H:%M:%S.%f")[:-3] = "2019-01-22 00:49:25.216"
-        :param date_time:
+        :param date_time: date_time类型， 如果是字符串类型则直接返回
         :param format: "%Y%m%d%H%M%S.%f" 格式为 "年月日时分秒.6位毫秒" 经[:-3]可以变为3位毫秒
         :return:
         """
