@@ -56,8 +56,12 @@ class BarData(object):
     def simple_cassandra_session(self):
         return self._simple_cassandra_session
 
-    def __init__(self, cassandra_host_port, cassandra_key_space):
+    def __init__(self):
         self._current_kline_date = None   # e.g. "2019-07-24"
+        self._simple_cassandra_session = None
+        self._cassandra_session = None
+
+    def do_init(self, cassandra_host_port, cassandra_key_space):
         # init cassandra session
         def pandas_factory(colnames, rows):
             return pd.DataFrame(rows, columns=colnames)

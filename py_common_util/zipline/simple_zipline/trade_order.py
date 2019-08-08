@@ -37,12 +37,16 @@ class TradeOrder(object):
     def multiple_order_position_dict(self):
         return self._multiple_trade_order_dict
 
-    def __init__(self, bar_data, commission):
+    def __init__(self):
         self._benchmark_security_code = None
-        self._bar_data = bar_data
-        self._commission = commission
+        self._bar_data = None
+        self._commission = None
         self._min_move = 0.0  # TODO default value is 0.01， 目前让其为0
         self._position_dict = EnhancedOrderedDict()  # 每只股票代码->1个Position对象
+
+    def do_init(self, bar_data, commission):
+        self._bar_data = bar_data
+        self._commission = commission
 
     def reinit_position_dict(self, target_security_init_cash_list):
         """
