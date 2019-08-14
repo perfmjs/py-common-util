@@ -166,23 +166,29 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
         # fig.savefig('～/gender_salary.png')
 
     @staticmethod
-    def _random_subset(list, select_num=10, random_seed=10):
+    def _random_subset(list, select_num=10, random_seed=10, head_start=0, head_end=2, foot_start=-2, foot_end=None):
         """
-        目前没有被使用，将来可以删除
-        保留头尾元素，从list中间元素中随机选择指定数量的元素，random_seed相同的情况下返回结果是固定的
+        保留头尾各2个元素，其它元素从list中间元素中随机选择指定数量的元素
         :param list: 目标list e.g. list = [i for i in range(189)]
         :param select_num: 指定数量（包括头尾元素）
-        :return: 选定后的list e.g. [0, 4, 9, 53, 110, 119, 124, 147, 148, 188]
+        :param random_seed 随机种子，在random_seed相同的情况下返回结果是固定的
+        :param head_start 保留前面部分的第head_start到head_end之间的元素，不包含index为head_end的元素
+        :param head_end
+        :param foot_start 保留后面面部分的第foot_start到foot_end之间的元素，不包含index为head_end的元素(foot_end=None除外)
+        :param foot_end 为None表示包含最后一个元素
+        :return: 选定后的list e.g. _random_subset([3], 10)->[3], _random_subset(list, 10)->[0, 1, 5, 10, 111, 125, 148, 149, 187, 188]
         """
-        if list is None or select_num <= 3 or len(list) <= select_num:
+        head_list = list[head_start:head_end]
+        foot_list = list[foot_start:foot_end]
+        default_element_num = len(head_list) + len(foot_list)
+        if list is None or select_num < default_element_num or len(list) <= select_num:
             return list
-        head = list[0]
-        foot = list[-1]
         indexs = [i for i in range(len(list))]
+        mid_list = indexs[head_end:foot_start]
         random.seed(random_seed)
-        slice_indexs = random.sample(indexs[1: -1], select_num - 2)
+        slice_indexs = random.sample(mid_list, select_num - default_element_num)
         slice_indexs = sorted(slice_indexs, key=int, reverse=False)
-        return [head] + [list[i] for i in slice_indexs] + [foot]
+        return head_list + [list[i] for i in slice_indexs] + foot_list
 
 
 if __name__ == '__main__':
