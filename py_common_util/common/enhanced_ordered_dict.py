@@ -26,6 +26,8 @@ class EnhancedOrderedDict(OrderedDict):
 
 if __name__ == '__main__':
     mod = EnhancedOrderedDict(banana=3, apple=4, pear=1, orange=2)
+    print(list(mod.keys()).index("pear"))
+    print(mod.to_list()[-1][1])
     print(mod.get("apple"))
     print(mod.subset())
     print("####test copy")

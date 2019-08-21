@@ -5,43 +5,6 @@ from cassandra.policies import DCAwareRoundRobinPolicy
 from py_common_util.common.common_utils import CommonUtils
 
 
-@CommonUtils.print_exec_time
-def daily_bar_to_pandas(cassandra_session, security_code_list, kline_date) -> pd.DataFrame:
-    """
-    参考：Get a Pandas DataFrame from a Cassandra query  https://gist.github.com/gioper86/b08b72d77c4e0aefa0137fc3655488dd
-    https://stackoverflow.com/questions/41247345/python-read-cassandra-data-into-pandas
-    :return:
-    """
-    # trade_date_list = ['2019-07-04','2019-07-08','2019-07-09','2019-07-10','2019-07-11','2019-07-12','2019-07-15','2019-07-16','2019-07-17','2019-07-01','2004-06-16','2004-06-17','2004-06-18','2004-06-21','2004-06-23','2004-06-24','2004-06-25','2004-06-28','2004-06-29','2004-06-30','2004-07-02','2004-07-05','2004-07-06','2004-07-07','2004-07-08','2004-07-09','2004-07-12','2004-07-13','2004-07-14','2004-07-15','2004-07-16','2004-07-19','2004-07-20','2004-07-21','2004-07-22','2004-07-23','2004-07-26','2004-07-27','2004-07-28','2004-07-29','2004-07-30','2004-08-02','2004-08-03','2004-08-04','2004-08-05','2004-08-06','2004-08-09','2004-08-10','2004-08-11','2004-08-12','2004-08-13','2004-08-16','2004-08-17','2004-08-18','2004-08-19','2004-08-20','2004-08-23','2004-08-24','2004-08-25','2004-08-26','2004-08-27','2004-08-30','2004-08-31','2004-09-01','2004-09-02','2004-09-03','2004-09-06','2004-09-07','2004-09-08','2004-09-09','2004-09-10','2004-09-13','2004-09-14','2004-09-15','2004-09-16','2004-09-17','2004-09-20','2004-09-21','2004-09-22','2004-09-23','2004-09-24','2004-09-27','2004-09-28','2004-09-03','2004-10-04','2004-10-05','2004-10-06','2004-10-07','2004-10-08','2004-10-11','2004-10-12','2004-10-13','2004-10-14','2004-10-15','2004-10-18','2004-10-19','2004-10-20','2004-10-21','2004-10-25','2004-10-26']
-    # trade_date_list_str = "'" + "','".join(trade_date_list) + "'"
-    security_code_list_str = "'" + "','".join(security_code_list) + "'"
-    filter_sql = """
-    select security_code, close as close 
-    from nocode_quant_hk_hist_data 
-    where trade_date = {}
-    and security_code in ({})
-    allow filtering
-    """.format("'" + kline_date + "'", security_code_list_str)
-    # print("daily_bar_to_pandas#cassandra filter sql: " + filter_sql)
-    # df = cassandra_session.execute(filter_sql, timeout=None)._current_rows # 不用这种方式to pandas
-    # df = pd.DataFrame(list(cassandra_session.execute(filter_sql)))
-    # if df.empty:
-    # 手工调用cassandra to pandas
-    rows = cassandra_session.execute(filter_sql)
-    security_list = []
-    close_list = []
-    for row in rows:
-        # print("just for debug.......simple is not null=", row[0], row[1])
-        security_list.append(row[0])
-        close_list.append(row[1])
-    data = {
-        'security_code': pd.Series(security_list),
-        'close': pd.Series(close_list),
-    }
-    df = pd.DataFrame(data)
-    return df
-
-
 class BarData(object):
     """bar数据，参考zipline._protocol.BarData"""
     @property
@@ -61,7 +24,8 @@ class BarData(object):
         self._simple_cassandra_session = None
         self._cassandra_session = None
 
-    def do_init(self, cassandra_host_port, cassandra_key_space):
+    def do_init(self, stock_type, cassandra_host_port, cassandra_key_space):
+        self._stock_type = stock_type  # e.g. 'HK', 'US'
         # init cassandra session
         def pandas_factory(colnames, rows):
             return pd.DataFrame(rows, columns=colnames)
@@ -95,7 +59,7 @@ class BarData(object):
         """
         i = 0
         while i < 1:
-            df = daily_bar_to_pandas(cassandra_session=self.simple_cassandra_session,
+            df = self._daily_bar_to_pandas(cassandra_session=self.simple_cassandra_session,
                                              security_code_list=security_code_list,
                                              kline_date=self.current_kline_date)
             if df.empty:
@@ -142,3 +106,43 @@ class BarData(object):
             return trade_lot
         else:
             return int(trade_lot / lot_size) * lot_size
+
+    @CommonUtils.print_exec_time
+    def _daily_bar_to_pandas(self, cassandra_session, security_code_list, kline_date) -> pd.DataFrame:
+        """
+        参考：Get a Pandas DataFrame from a Cassandra query  https://gist.github.com/gioper86/b08b72d77c4e0aefa0137fc3655488dd
+        https://stackoverflow.com/questions/41247345/python-read-cassandra-data-into-pandas
+        :return:
+        """
+        table_name = ''
+        if self._stock_type == 'HK':
+            table_name = 'nocode_quant_hk_stock_screen_data'
+        elif self._stock_type == 'US':
+            table_name = 'nocode_quant_us_stock_screen_data'
+        # trade_date_list = ['2019-07-04','2019-07-08','2019-07-09','2019-07-10','2019-07-11','2019-07-12','2019-07-15','2019-07-16','2019-07-17','2019-07-01','2004-06-16','2004-06-17','2004-06-18','2004-06-21','2004-06-23','2004-06-24','2004-06-25','2004-06-28','2004-06-29','2004-06-30','2004-07-02','2004-07-05','2004-07-06','2004-07-07','2004-07-08','2004-07-09','2004-07-12','2004-07-13','2004-07-14','2004-07-15','2004-07-16','2004-07-19','2004-07-20','2004-07-21','2004-07-22','2004-07-23','2004-07-26','2004-07-27','2004-07-28','2004-07-29','2004-07-30','2004-08-02','2004-08-03','2004-08-04','2004-08-05','2004-08-06','2004-08-09','2004-08-10','2004-08-11','2004-08-12','2004-08-13','2004-08-16','2004-08-17','2004-08-18','2004-08-19','2004-08-20','2004-08-23','2004-08-24','2004-08-25','2004-08-26','2004-08-27','2004-08-30','2004-08-31','2004-09-01','2004-09-02','2004-09-03','2004-09-06','2004-09-07','2004-09-08','2004-09-09','2004-09-10','2004-09-13','2004-09-14','2004-09-15','2004-09-16','2004-09-17','2004-09-20','2004-09-21','2004-09-22','2004-09-23','2004-09-24','2004-09-27','2004-09-28','2004-09-03','2004-10-04','2004-10-05','2004-10-06','2004-10-07','2004-10-08','2004-10-11','2004-10-12','2004-10-13','2004-10-14','2004-10-15','2004-10-18','2004-10-19','2004-10-20','2004-10-21','2004-10-25','2004-10-26']
+        # trade_date_list_str = "'" + "','".join(trade_date_list) + "'"
+        security_code_list_str = "'" + "','".join(security_code_list) + "'"
+        filter_sql = """
+        select security_code, close as close 
+        from {} 
+        where trade_date = {}
+        and security_code in ({})
+        """.format(table_name, "'" + kline_date + "'", security_code_list_str)
+        # print("daily_bar_to_pandas#cassandra filter sql: " + filter_sql)
+        # df = cassandra_session.execute(filter_sql, timeout=None)._current_rows # 不用这种方式to pandas
+        # df = pd.DataFrame(list(cassandra_session.execute(filter_sql)))
+        # if df.empty:
+        # 手工调用cassandra to pandas
+        rows = cassandra_session.execute(filter_sql)
+        security_list = []
+        close_list = []
+        for row in rows:
+            # print("just for debug.......simple is not null=", row[0], row[1])
+            security_list.append(row[0])
+            close_list.append(row[1])
+        data = {
+            'security_code': pd.Series(security_list),
+            'close': pd.Series(close_list),
+        }
+        df = pd.DataFrame(data)
+        return df

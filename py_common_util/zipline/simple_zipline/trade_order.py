@@ -75,9 +75,12 @@ class TradeOrder(object):
                      limit_price=None,
                      stop_price=None,
                      style=None):
-        """参考：zipline.api.order_target()"""
+        """
+        参考：zipline.api.order_target()
+        :return 返回提交委托交易的股票数量和价格 e.g. (1, 33.34)
+        """
         if not self._can_order_asset(security_code):
-            return None
+            return 0, 0
         amount = self._calculate_order_target_amount(security_code, target)
         return self.order(security_code, amount,
                           limit_price=limit_price,
@@ -93,25 +96,26 @@ class TradeOrder(object):
         """
         amount 0-不交易，仅仅按最新价刷新该股票持仓总价值；负数-sell(减仓)；正数-buy(加仓)
         参考：zipline.api.order(), zipline.TradingAlgorithm()
+        :return 返回提交委托交易的股票数量和价格 e.g. (1, 33.34)
         """
         if amount == 0:
             # amount=0-不交易，仅仅按最新价刷新该股票持仓总价值
             if self.position_dict.get(security_code):
                 self.position_dict.get(security_code).update(0, limit_price, 0, 0, market_position=1)
-            return None
+            return 0, 0
         if not self._can_order_asset(security_code):
-            return None
+            return 0, 0
         try:
             self._validate_order_params(security_code, amount, limit_price, stop_price, style)
         except Exception as e:
             print("order validation error：%s" % str(e))
-            return None
+            return 0, 0
         amount, handled_limit_price = self._calculate_order(security_code, amount, limit_price, stop_price, style)
         if self.position_dict.get(security_code):
             self.position_dict.get(security_code).update(amount, handled_limit_price, self.min_move, self.commission, market_position=1)
-        for security_code in self.position_dict.keys():
-            print("order....", self.position_dict[security_code].to_dict())
-        return None
+        # for security_code in self.position_dict.keys():
+        #     print("order....", self.position_dict[security_code].to_dict())
+        return amount, handled_limit_price
 
     def _validate_order_params(self,
                               security_code,
