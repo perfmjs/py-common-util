@@ -116,28 +116,21 @@ class BarData(object):
         """
         table_name = ''
         if self._stock_type == 'HK':
-            table_name = 'nocode_quant_hk_stock_screen_data'
+            table_name = 'nocode_quant_hk_screen_data'
         elif self._stock_type == 'US':
-            table_name = 'nocode_quant_us_stock_screen_data'
-        # trade_date_list = ['2019-07-04','2019-07-08','2019-07-09','2019-07-10','2019-07-11','2019-07-12','2019-07-15','2019-07-16','2019-07-17','2019-07-01','2004-06-16','2004-06-17','2004-06-18','2004-06-21','2004-06-23','2004-06-24','2004-06-25','2004-06-28','2004-06-29','2004-06-30','2004-07-02','2004-07-05','2004-07-06','2004-07-07','2004-07-08','2004-07-09','2004-07-12','2004-07-13','2004-07-14','2004-07-15','2004-07-16','2004-07-19','2004-07-20','2004-07-21','2004-07-22','2004-07-23','2004-07-26','2004-07-27','2004-07-28','2004-07-29','2004-07-30','2004-08-02','2004-08-03','2004-08-04','2004-08-05','2004-08-06','2004-08-09','2004-08-10','2004-08-11','2004-08-12','2004-08-13','2004-08-16','2004-08-17','2004-08-18','2004-08-19','2004-08-20','2004-08-23','2004-08-24','2004-08-25','2004-08-26','2004-08-27','2004-08-30','2004-08-31','2004-09-01','2004-09-02','2004-09-03','2004-09-06','2004-09-07','2004-09-08','2004-09-09','2004-09-10','2004-09-13','2004-09-14','2004-09-15','2004-09-16','2004-09-17','2004-09-20','2004-09-21','2004-09-22','2004-09-23','2004-09-24','2004-09-27','2004-09-28','2004-09-03','2004-10-04','2004-10-05','2004-10-06','2004-10-07','2004-10-08','2004-10-11','2004-10-12','2004-10-13','2004-10-14','2004-10-15','2004-10-18','2004-10-19','2004-10-20','2004-10-21','2004-10-25','2004-10-26']
-        # trade_date_list_str = "'" + "','".join(trade_date_list) + "'"
+            table_name = 'nocode_quant_us_screen_data'
         security_code_list_str = "'" + "','".join(security_code_list) + "'"
         filter_sql = """
-        select security_code, close as close 
-        from {} 
-        where trade_date = {}
-        and security_code in ({})
+        select security_code, hfq_close as close 
+        from {0} 
+        where trade_date = {1}
+        and security_code in ({2})
         """.format(table_name, "'" + kline_date + "'", security_code_list_str)
-        # print("daily_bar_to_pandas#cassandra filter sql: " + filter_sql)
-        # df = cassandra_session.execute(filter_sql, timeout=None)._current_rows # 不用这种方式to pandas
-        # df = pd.DataFrame(list(cassandra_session.execute(filter_sql)))
-        # if df.empty:
         # 手工调用cassandra to pandas
         rows = cassandra_session.execute(filter_sql)
         security_list = []
         close_list = []
         for row in rows:
-            # print("just for debug.......simple is not null=", row[0], row[1])
             security_list.append(row[0])
             close_list.append(row[1])
         data = {

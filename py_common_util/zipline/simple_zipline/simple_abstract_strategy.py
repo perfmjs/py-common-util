@@ -127,7 +127,7 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
             self.sink_fn(self.sink_out_dict)
             return self.perf
         except Exception as e:
-            self.log.error("error occurred while backtesting: %s", str(e))
+            self.log.error("error occurred while backtesting: %s" % str(e))
             traceback.print_exc()
 
     @CommonUtils.print_exec_time
