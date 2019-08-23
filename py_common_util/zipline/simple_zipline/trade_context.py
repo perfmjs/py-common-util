@@ -9,3 +9,6 @@ class TradeContext(object):
         self.current_bar_item_kline_date = None  # 当前k线的日期，分钟K线如"2019-08-01 15:30" 日K如"2019-08-01"
         self.stock_type = ""  # 股票类型 HK: 港股，US: 美股
         self.backtest_setting = None  # 回测设置
+
+
+

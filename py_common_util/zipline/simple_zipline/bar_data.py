@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+import traceback
 from cassandra.cluster import Cluster
 from cassandra.policies import DCAwareRoundRobinPolicy
 from py_common_util.common.common_utils import CommonUtils
@@ -57,16 +58,9 @@ class BarData(object):
         :param kline_date: bar日期 e.g. "2019-07-24"
         :return: bar_item e.g. {"security_code": "00700.HK", "close": 1.0, "kline_date": "2019-07-24"}
         """
-        i = 0
-        while i < 1:
-            df = self._daily_bar_to_pandas(cassandra_session=self.simple_cassandra_session,
-                                             security_code_list=security_code_list,
-                                             kline_date=self.current_kline_date)
-            if df.empty:
-                i += 1
-            else:
-                return df
-        return df
+        return self._daily_bar_to_pandas(cassandra_session=self.simple_cassandra_session,
+                                         security_code_list=security_code_list,
+                                         kline_date=self.current_kline_date)
 
     def calc_lot_size(self, security_code):
         """一手股票的股数, 美股为1，A股为100，港股中每手的股数不同"""
@@ -127,15 +121,21 @@ class BarData(object):
         and security_code in ({2})
         """.format(table_name, "'" + kline_date + "'", security_code_list_str)
         # 手工调用cassandra to pandas
-        rows = cassandra_session.execute(filter_sql)
-        security_list = []
-        close_list = []
-        for row in rows:
-            security_list.append(row[0])
-            close_list.append(row[1])
-        data = {
-            'security_code': pd.Series(security_list),
-            'close': pd.Series(close_list),
-        }
-        df = pd.DataFrame(data)
-        return df
+        try:
+            rows = cassandra_session.execute(filter_sql)
+            security_list = []
+            close_list = []
+            for row in rows:
+                security_list.append(row[0])
+                close_list.append(row[1])
+            data = {
+                'security_code': pd.Series(security_list),
+                'close': pd.Series(close_list),
+            }
+            return pd.DataFrame(data)
+        except Exception as e:
+            print("bar_data#_daily_bar_to_pandas.filter_sql=%s" % filter_sql)
+            print("bar_data#_daily_bar_to_pandas error occurred: %s" % str(e))
+            traceback.print_exc()
+        return None
+
