@@ -32,16 +32,18 @@ class Position(object):
         """
         if self.market_position > 0:
             if added_amount > 0:
-                self.income += -abs(added_amount)*new_last_price - abs(added_amount)*(min_move + new_last_price*commision)
-                self.balance_cash = self.init_cash_per_stock + self.income
+                # self.income += -abs(added_amount)*new_last_price - abs(added_amount)*(min_move + new_last_price*commision)
+                # self.balance_cash = self.init_cash_per_stock + self.income
+                self.balance_cash += -abs(added_amount)*new_last_price - abs(added_amount)*(min_move + new_last_price*commision)
             elif added_amount == 0:  # 相当于先卖掉旧的再买回来
                 # 刷新总价值时balance_cash 和 income都不变化
                 # self.income += self.amount * self.last_price - self.amount * (min_move + self.last_price * commision)
                 # self.income += -self.amount * new_last_price - self.amount * (min_move + new_last_price * commision)
                 pass
             elif added_amount < 0:
-                self.income += abs(added_amount) * new_last_price - abs(added_amount) * (min_move + new_last_price * commision)
-                self.balance_cash = self.init_cash_per_stock + self.income
+                # self.income += abs(added_amount) * new_last_price - abs(added_amount) * (min_move + new_last_price * commision)
+                # self.balance_cash = self.init_cash_per_stock + self.income
+                self.balance_cash += abs(added_amount) * new_last_price - abs(added_amount) * (min_move + new_last_price * commision)
         self.amount += added_amount
         self.last_price = new_last_price
         # 第1次交易时更新start_amount和start_price
@@ -50,7 +52,7 @@ class Position(object):
         if self.start_price == 0:
             self.start_price = self.last_price
 
-    def reinit(self, init_cash_per_stock, amount=0, start_price=0, market_position=1):
+    def reinit(self, init_cash_per_stock, balance_cash=0, amount=0, start_price=0, market_position=1):
         """
         重新初始化持仓(在调仓日准备重新交易旧的持仓股票的时候使用)
         clean balance，income，last_price, 只保留amount的历史值
@@ -58,9 +60,11 @@ class Position(object):
         """
         self.__init__(self.security_code,
                       init_cash_per_stock=init_cash_per_stock,
+
                       amount=amount,
                       start_price=start_price,
                       market_position=market_position)
+        self.balance_cash = balance_cash
 
     def to_dict(self):
         """

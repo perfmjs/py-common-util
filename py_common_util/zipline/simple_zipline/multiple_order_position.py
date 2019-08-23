@@ -45,9 +45,10 @@ class MultipleOrderPosition(object):
         else:
             return None
 
-    def update(self, trade_date, position_dict_copy):
+    def update(self, trade_date, position_dict_copy, total_balance_cash):
         # 更新每天的持仓明细
         self.position_dict[trade_date] = position_dict_copy
+        self.total_balance_cash = total_balance_cash
         # curr_batch_total_income = 0
         # curr_batch_total_profit = 0
         # curr_batch_total_balance_cash = 0

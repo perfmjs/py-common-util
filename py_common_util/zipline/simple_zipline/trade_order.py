@@ -51,15 +51,17 @@ class TradeOrder(object):
     def reinit_position_dict(self, target_security_init_cash_list):
         """
         重新初始化所有股票的持仓
-        @:param target_security_init_cash_list e.g. {"00700.HK": 333333}
+        @:param target_security_init_cash_list e.g. {"00700.HK": {"init_cash_per_stock":333333, "balance_cash":0}}
         """
         for target_security_code in target_security_init_cash_list:
-            new_init_cash = target_security_init_cash_list[target_security_code]
+            new_init_cash = target_security_init_cash_list[target_security_code]["init_cash_per_stock"]
+            balance_cash = target_security_init_cash_list[target_security_code]["balance_cash"]
             target_position = self.position_dict.get(target_security_code)
             if target_position:
                 self.position_dict.get(target_security_code).reinit(init_cash_per_stock=new_init_cash,
+                                                                    balance_cash=balance_cash,
                                                                     amount=target_position.amount,
-                                                                    start_price=target_position.last_price)
+                                                                    start_price=0)
             else:
                 self.position_dict[target_security_code] = Position(target_security_code,
                                                                     init_cash_per_stock=new_init_cash)
@@ -134,7 +136,7 @@ class TradeOrder(object):
         if amount > 0:
             if self.position_dict.get(security_code):
                 if self.position_dict.get(security_code).balance_cash < amount * limit_price:
-                    raise Exception("buy order balance cash is not enough!!!")
+                    raise Exception("security_code=%s, amount=%s, limit_price=%s, balance_cash=%s, buy order balance cash is not enough!!!" % (security_code, str(amount), str(limit_price), str(self.position_dict.get(security_code).balance_cash)))
 
     def _asymmetric_round_price(self, price, prefer_round_down, tick_size=0.01, diff=0.95):
         """

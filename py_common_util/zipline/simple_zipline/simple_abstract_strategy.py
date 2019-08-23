@@ -152,12 +152,12 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
         sns.lineplot(x='period_close',
                      y='strategy_return',
                      data=perf,
-                     label="stock")
+                     label="strategy_return")
         sns.lineplot(x='period_close',
                      y='benchmark_return',
-                     data=perf, label="benchmark")
+                     data=perf, label="benchmark_return")
         plt.legend(loc='upper left')
-        plt.title("return rate of AAPL and SPX")
+        plt.title("return rate of strategy and benchmark")
         plt.xlabel('time')
         plt.ylabel('return rate')
         plt.show()
