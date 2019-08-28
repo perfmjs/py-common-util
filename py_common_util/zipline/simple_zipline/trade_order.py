@@ -53,7 +53,7 @@ class TradeOrder(object):
         重新初始化所有股票的持仓
         @:param target_security_init_cash_list e.g. {"00700.HK": {"init_cash_per_stock":333333, "balance_cash":0}}
         """
-        for target_security_code in target_security_init_cash_list:
+        for target_security_code in target_security_init_cash_list.keys():
             new_init_cash = target_security_init_cash_list[target_security_code]["init_cash_per_stock"]
             balance_cash = target_security_init_cash_list[target_security_code]["balance_cash"]
             target_position = self.position_dict.get(target_security_code)
@@ -63,9 +63,8 @@ class TradeOrder(object):
                                                                     amount=target_position.amount,
                                                                     start_price=0)
             else:
-                self.position_dict[target_security_code] = Position(target_security_code,
-                                                                    init_cash_per_stock=new_init_cash)
-        # 清空非target_security_init_cash_list里的所有position
+                self.position_dict[target_security_code] = Position(target_security_code, init_cash_per_stock=new_init_cash)
+        # 删除非target_security_init_cash_list里的所有position
         keys = [key for key in self.position_dict.keys()]
         for security_code in keys:
             if security_code not in target_security_init_cash_list:

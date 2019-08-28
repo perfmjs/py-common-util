@@ -13,9 +13,9 @@
 #torchvision>=0.2.2
 #allennlp>=0.6.0
 #####
-###手工安装指定版本：$sudo pip3 install tensorflow-gpu==1.10.0 --index https://pypi.mirrors.ustc.edu.cn/simple/
-#更新到最新版：$sudo pip3 install -U tensorflow-gpu --index https://pypi.mirrors.ustc.edu.cn/simple/
-###手工升级numpy: $sudo pip3 install -U numpy --index https://pypi.mirrors.ustc.edu.cn/simple/
+###手工安装指定版本：$sudo pip3 install tensorflow-gpu==1.10.0 -i https://pypi.mirrors.ustc.edu.cn/simple/
+#更新到最新版：$sudo pip3 install -U tensorflow-gpu -i https://pypi.mirrors.ustc.edu.cn/simple/
+###手工升级numpy: $sudo pip3 install -U numpy -i https://pypi.mirrors.ustc.edu.cn/simple/
 #########
 ###升级: $sudo pip3 install -U h5py
 ##升级h5py可解决类似问题：RuntimeWarning: compiletime version 3.5 of module 'tensorflow.python.framework.fast_tensor_util' does not match runtime version 3.6 return f(*args, **kwds)

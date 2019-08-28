@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+import json
 import traceback
 from cassandra.cluster import Cluster
 from cassandra.policies import DCAwareRoundRobinPolicy
+from rediscluster import StrictRedisCluster
 from py_common_util.common.common_utils import CommonUtils
 
 
@@ -25,7 +27,7 @@ class BarData(object):
         self._simple_cassandra_session = None
         self._cassandra_session = None
 
-    def do_init(self, stock_type, cassandra_host_port, cassandra_key_space):
+    def do_init(self, stock_type, cassandra_host_port, cassandra_key_space, redis_conn_nodes):
         self._stock_type = stock_type  # e.g. 'HK', 'US'
         # init cassandra session
         def pandas_factory(colnames, rows):
@@ -38,6 +40,7 @@ class BarData(object):
         self._cassandra_session = cluster.connect(cassandra_key_space)
         self._cassandra_session.default_fetch_size = 10000000  # needed for large queries, otherwise driver will do pagination. Default is 50000.
         self._cassandra_session.row_factory = pandas_factory
+        self._redis_conn_nodes = redis_conn_nodes
 
     def set_current_kline_date(self, current_kline_date):
         self._current_kline_date = current_kline_date
@@ -65,7 +68,15 @@ class BarData(object):
     def calc_lot_size(self, security_code):
         """一手股票的股数, 美股为1，A股为100，港股中每手的股数不同"""
         if ".HK" in security_code:
-            return 100  # TODO 先hard code 100
+            redis_key = "spark:data:hq_security_definition:vo:" + security_code
+            redis_client = StrictRedisCluster(startup_nodes=self._redis_conn_nodes, decode_responses=True)
+            lot_size = 100
+            try:
+                result = json.loads(redis_client.get(redis_key))
+                lot_size = result["lotSize"]
+            except Exception as e:
+                print("error occurred at calc_lot_size for get hk lot size from redis: %s" % str(e))
+            return lot_size
         elif ".SZ" in security_code or ".SH" in security_code:
             return 100
         else:

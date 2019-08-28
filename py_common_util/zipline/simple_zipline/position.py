@@ -60,7 +60,6 @@ class Position(object):
         """
         self.__init__(self.security_code,
                       init_cash_per_stock=init_cash_per_stock,
-
                       amount=amount,
                       start_price=start_price,
                       market_position=market_position)

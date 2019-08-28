@@ -49,19 +49,12 @@ class MultipleOrderPosition(object):
         # 更新每天的持仓明细
         self.position_dict[trade_date] = position_dict_copy
         self.total_balance_cash = total_balance_cash
-        # curr_batch_total_income = 0
-        # curr_batch_total_profit = 0
-        # curr_batch_total_balance_cash = 0
-        # curr_batch_total_value = 0
-        # for security_code in self.position_dict[trade_date]:
-        #     position = self.position_dict[trade_date].get(security_code)
-        #     curr_batch_total_income += position.income
-        #     curr_batch_total_profit += position.amount * position.last_price
-        #     curr_batch_total_balance_cash += position.balance_cash
-        #     curr_batch_total_value += curr_batch_total_profit + curr_batch_total_balance_cash
-        # self.total_profit += curr_batch_total_profit  # TODO 应该同一批次的多个日期一起计算
-        # self.total_value += curr_batch_total_value  # TODO 应该同一批次的多个日期一起计算
-        # print(trade_date + ", MultipleOrderPosition#curr_batch_total_value=" + str(curr_batch_total_value))
+        total_profit = 0
+        for security_code in self.position_dict[trade_date]:
+            position = self.position_dict[trade_date].get(security_code)
+            total_profit += position.amount * position.last_price
+        self.total_profit = total_profit
+        self.total_value = self.total_profit + self.total_balance_cash
 
     @staticmethod
     def _make_id():
