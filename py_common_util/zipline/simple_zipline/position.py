@@ -71,12 +71,12 @@ class Position(object):
         Returns a dict object of the form:
         """
         return {
-            'security_code': self.security_code,
+            "security_code": self.security_code,
             # "start_amount": self.start_amount,
             "amount": self.amount,
             "income": self.income,
             "balance_cash": self.balance_cash,
             "start_price": self.start_price,
-            "last_price": self.last_price,
+            "last_price": self.last_price
             # "market_position": self.market_position
         }

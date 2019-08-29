@@ -100,8 +100,8 @@ class BarData(object):
     def _calc_trade_lot(self, trade_lot:int, lot_size:int=1):
         """
         把计划交易的股数转成可以被手数整除的实际股数
-        trade_lot: 计划交易的股数， 可以为float类型的值
-        lot_size 1手多少股
+        :param trade_lot 计划交易的股数， 可以为float类型的值
+        :param lot_size 1手多少股
         """
         # if trade_lot <= lot_size:  # 如果数量小于1手，就下1手的数量
         #     return lot_size

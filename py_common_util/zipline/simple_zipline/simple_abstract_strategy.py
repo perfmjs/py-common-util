@@ -111,6 +111,7 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
         self.log.info("analyze...")
 
     def sink(self, value: EnhancedOrderedDict):
+        """持久化输出对象"""
         pass
 
     def run_algorithm(self):
@@ -129,6 +130,7 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
         except Exception as e:
             self.log.error("error occurred while backtesting: %s" % str(e))
             traceback.print_exc()
+        return None
 
     @CommonUtils.print_exec_time
     def process(self):
@@ -168,12 +170,12 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
     @staticmethod
     def _random_subset(list, select_num=10, random_seed=10, head_start=0, head_end=2, foot_start=-2, foot_end=None):
         """
-        保留头尾各2个元素，其它元素从list中间元素中随机选择指定数量的元素
+        保留头尾各n个元素，其它元素从list中间元素中随机选择指定数量的元素
         :param list: 目标list e.g. list = [i for i in range(189)]
-        :param select_num: 指定数量（包括头尾元素）
+        :param select_num: 指定输出元素数量（包括头尾元素）
         :param random_seed 随机种子，在random_seed相同的情况下返回结果是固定的
         :param head_start 保留前面部分的第head_start到head_end之间的元素，不包含index为head_end的元素
-        :param head_end
+        :param head_end 同head_start
         :param foot_start 保留后面面部分的第foot_start到foot_end之间的元素，不包含index为head_end的元素(foot_end=None除外)
         :param foot_end 为None表示包含最后一个元素
         :return: 选定后的list e.g. _random_subset([3], 10)->[3], _random_subset(list, 10)->[0, 1, 5, 10, 111, 125, 148, 149, 187, 188]
