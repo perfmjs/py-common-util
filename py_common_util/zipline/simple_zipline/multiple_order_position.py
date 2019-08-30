@@ -50,9 +50,17 @@ class MultipleOrderPosition(object):
         self.position_dict[trade_date] = position_dict_copy
         self.total_balance_cash = total_balance_cash
         total_profit = 0
+        should_del_security_list = []
         for security_code in self.position_dict[trade_date]:
             position = self.position_dict[trade_date].get(security_code)
-            total_profit += position.amount * position.last_price
+            if position.amount > 0:
+                total_profit += position.amount * position.last_price
+                self.total_balance_cash += position.balance_cash
+            else:
+                should_del_security_list.append(security_code)
+        # 删除amount=0的已经卖空了的持仓
+        for security_code in should_del_security_list:
+            del self.position_dict[trade_date][security_code]
         self.total_profit = total_profit
         self.total_value = self.total_profit + self.total_balance_cash
 
