@@ -23,9 +23,29 @@ class EnhancedOrderedDict(OrderedDict):
         """convert OrderedDict's items to list"""
         return list(self.items())
 
+    def next_key(self, key):
+        all_keys = list(self.keys())
+        if key in all_keys:
+            key_index = all_keys.index(key)
+        if key_index+1 <= len(all_keys) - 1:
+            return all_keys[key_index + 1]
+        else:
+            return None
+
+    def prev_key(self, key):
+        all_keys = list(self.keys())
+        if key in all_keys:
+            key_index = all_keys.index(key)
+        if key_index-1 >= 0:
+            return all_keys[key_index - 1]
+        else:
+            return None
+
 
 if __name__ == '__main__':
     mod = EnhancedOrderedDict(banana=3, apple=4, pear=1, orange=2)
+    print("apple next_key=" + str(mod.next_key("orange")))
+    print("apple prev_key=" + str(mod.prev_key("orange")))
     print(list(mod.keys()).index("pear"))
     print(mod.to_list()[-1][1])
     print(mod.get("apple"))

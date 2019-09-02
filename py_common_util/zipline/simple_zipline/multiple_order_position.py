@@ -9,7 +9,7 @@ class MultipleOrderPosition(object):
     每个调仓周期只对应1个MultipleOrderPosition对象，而每个MultipleOrderPosition对象对应有调仓周期中所有日期的持仓字典position_dict
     init_cash: 回测时的初始总金额。后面会浮动变成total_value
     total_profit 多只股票的总收益 (会根据最新价浮动变化，每笔交易中多只股票里累计每只股票的股数*price，不计算手续费和min_move)
-    total_balance_cash 剩余的总现金 (不会根据最新价浮动变化，本金减去了每笔历史交易当时的total_profit、手续费、min_move，之后还剩余的现金)
+    total_balance_cash 【start_date调仓后 至 end_date日准备进行下个调仓周期前的持仓】剩余的总现金 (不会根据最新价浮动变化，本金减去了每笔历史交易当时的total_profit、手续费、min_move，之后还剩余的现金)
     total_value  每日策略内多只股票累加的总价值=total_profit+total_balance_cash
     turnover_ratio 调仓换手率：每次调仓期初换股当日的换手率(TODO 全被换为1，没有换股则为0，第1天交易为0)。计算公式：调仓换股后的上期末总价值中被减仓部分的价值之和 / 这次调仓换股前的上期末的总价值，其中总价值=sum(每只股票的last_price*持仓股数)
     """
