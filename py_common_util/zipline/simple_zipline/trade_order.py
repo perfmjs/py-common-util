@@ -103,7 +103,7 @@ class TradeOrder(object):
             # amount=0-不交易，仅仅按最新价刷新该股票持仓总价值
             if self.position_dict.get(security_code):
                 self.position_dict.get(security_code).update(0, limit_price, 0, 0, market_position=1)
-            return 0, 0
+            return 0, limit_price
         if not self._can_order_asset(security_code):
             return 0, 0
         try:

@@ -112,7 +112,7 @@ class BarData(object):
         else:
             return int(trade_lot / lot_size) * lot_size
 
-    @CommonUtils.print_exec_time
+    # @CommonUtils.print_exec_time
     def _daily_bar_to_pandas(self, cassandra_session, security_code_list, kline_date) -> pd.DataFrame:
         """
         参考：Get a Pandas DataFrame from a Cassandra query  https://gist.github.com/gioper86/b08b72d77c4e0aefa0137fc3655488dd

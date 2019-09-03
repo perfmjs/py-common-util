@@ -11,7 +11,7 @@ class MultipleOrderPosition(object):
     total_profit 多只股票的总收益 (会根据最新价浮动变化，每笔交易中多只股票里累计每只股票的股数*price，不计算手续费和min_move)
     total_balance_cash 【start_date调仓后 至 end_date日准备进行下个调仓周期前的持仓】剩余的总现金 (不会根据最新价浮动变化，本金减去了每笔历史交易当时的total_profit、手续费、min_move，之后还剩余的现金)
     total_value  每日策略内多只股票累加的总价值=total_profit+total_balance_cash
-    turnover_ratio 调仓换手率：每次调仓期初换股当日的换手率(TODO 全被换为1，没有换股则为0，第1天交易为0)。计算公式：调仓换股后的上期末总价值中被减仓部分的价值之和 / 这次调仓换股前的上期末的总价值，其中总价值=sum(每只股票的last_price*持仓股数)
+    turnover_ratio 调仓换手率。调仓日换手率计算公式:（每次调仓日卖出的股票市值+每次调仓日买入的股票市值 * 0.5 / (调仓后）账户总资产
     """
     @property
     def position_dict(self):
@@ -25,15 +25,16 @@ class MultipleOrderPosition(object):
         self.total_balance_cash = init_cash
         self.total_value = init_cash
         self._position_dict = EnhancedOrderedDict()  # 每日日期-> trade_order.position_dict.copy()
-        self.turnover_ratio = 0.0
+        self.turnover_adjust_total_value = 0.0  # 每次调仓时卖出和调整过的股票市值
+        self.turnover_ratio = 0.0  # 调仓换手率
 
     def set_end_date(self, end_date):
         """更新该调仓周期的结束日期"""
         self.end_date = end_date
 
-    def set_adjust_turnover_ratio(self, turnover_ratio):
-        """在新的调仓日期调仓完毕后更新该调仓周期的调仓换手率"""
-        self.turnover_ratio = turnover_ratio
+    def set_turnover_adjust_total_value(self, turnover_adjust_total_value):
+        """在新的调仓日期调仓完毕后更新该调仓周期的调仓换手率之计算分子：每次调仓时卖出和调整过的股票市值"""
+        self.turnover_adjust_total_value = turnover_adjust_total_value
 
     def get_last_day_position_dict(self):
         """
@@ -63,6 +64,9 @@ class MultipleOrderPosition(object):
             del self.position_dict[trade_date][security_code]
         self.total_profit = total_profit
         self.total_value = self.total_profit + self.total_balance_cash
+        # 计算每个调仓日的换手率
+        if self.start_date == trade_date and self.total_value > 0:
+            self.turnover_ratio = self.turnover_adjust_total_value * 0.5 / self.total_value
 
     @staticmethod
     def _make_id():
@@ -84,5 +88,7 @@ class MultipleOrderPosition(object):
             'total_balance_cash': self.total_balance_cash,
             "total_profit": self.total_profit,
             "total_value": self.total_value,
+            "turnover_adjust_total_value": self.turnover_adjust_total_value,
+            "turnover_ratio": self.turnover_ratio,
             "position_dict": position_dict_str
         }
