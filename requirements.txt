@@ -48,5 +48,5 @@ requests>=2.18.4
 #需要手动安装 trading-calendars>=1.8.1
 #需要手动安装 empyrical>=0.5.0
 #需要手动安装 logbook
-#redis cluster: redis和redis-py-cluster冲突，可能需要先uninstall已安装高版本的redis, 然后再安装redis-py-cluster, 最后再$pip install -U redis==2.10.6
-#需要手动安装 redis-py-cluster>=1.3.6
+#redis cluster: redis和redis-py-cluster冲突，可能需要先uninstall已安装高版本的redis, 然后再安装redis-py-cluster, 最后再$pip install -U redis==3.0.1
+#需要手动安装 redis-py-cluster==2.0.0

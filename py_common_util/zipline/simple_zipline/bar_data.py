@@ -4,7 +4,7 @@ import json
 import traceback
 from cassandra.cluster import Cluster
 from cassandra.policies import DCAwareRoundRobinPolicy
-from rediscluster import StrictRedisCluster
+from rediscluster import RedisCluster
 from py_common_util.common.common_utils import CommonUtils
 
 
@@ -69,7 +69,7 @@ class BarData(object):
         """一手股票的股数, 美股为1，A股为100，港股中每手的股数不同"""
         if ".HK" in security_code:
             redis_key = "spark:data:hq_security_definition:vo:" + security_code
-            redis_client = StrictRedisCluster(startup_nodes=self._redis_conn_nodes, decode_responses=True)
+            redis_client = RedisCluster(startup_nodes=self._redis_conn_nodes, decode_responses=True)
             lot_size = 100
             try:
                 result = json.loads(redis_client.get(redis_key))
