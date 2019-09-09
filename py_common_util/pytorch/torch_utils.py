@@ -83,12 +83,20 @@ class TorchUtils:
         return torch.is_tensor(tensor_data)
 
     @staticmethod
+    def check_available_gpus(show_info=False):
+        gpu_num = torch.cuda.device_count()
+        gpu_names = str([torch.cuda.get_device_name(i) for i in range(gpu_num)])
+        if show_info:
+            print('{0} GPUs are detected : {1}'.format(gpu_num, gpu_names))
+        return gpu_num
+
+    @staticmethod
     def cuda_is_available():
         return torch.cuda.is_available()
 
     @staticmethod
     def device(device="gpu", device_index=0):
-        return torch.device("cuda" if device=='gpu' else "cpu", device_index)
+        return torch.device("cuda" if device == "gpu" else "cpu", device_index)
 
 
 if __name__ == '__main__':

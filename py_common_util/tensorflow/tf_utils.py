@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import tensorflow as tf
+from tensorflow.python.client import device_lib
 import numpy as np
 # 解决Warning：Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
 import os
@@ -145,7 +146,6 @@ class TFUtils:
 
     @staticmethod
     def check_available_gpus(show_info=False):
-        from tensorflow.python.client import device_lib
         local_devices = device_lib.list_local_devices()
         gpu_names = [x.name for x in local_devices if x.device_type == 'GPU']
         gpu_num = len(gpu_names)
