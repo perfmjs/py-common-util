@@ -30,6 +30,8 @@ class TFUtils:
         if allow_smaller_final_batch:
             if num_total > (num_batch * batch_size):
                 return num_batch + 1
+            else:
+                return num_batch
         else:
             # 舍去最后不能够成1批的剩余训练数据部分
             return num_batch
