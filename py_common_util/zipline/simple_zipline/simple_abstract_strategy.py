@@ -141,6 +141,8 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
         import seaborn as sns
         import matplotlib.pyplot as plt
         from matplotlib.dates import DateFormatter
+        from pandas.plotting import register_matplotlib_converters
+        register_matplotlib_converters()
         sns.set_style('darkgrid')
         sns.set_context('notebook')
         ax = plt.axes()
