@@ -26,7 +26,8 @@ class MultipleOrderPosition(object):
         self.total_value = init_cash
         self._position_dict = EnhancedOrderedDict()  # 每日日期-> trade_order.position_dict.copy()
         self.turnover_adjust_total_value = 0.0  # 每次调仓时卖出和调整过的股票市值
-        self.turnover_ratio = 0.0  # 调仓换手率
+        self.turnover_ratio = 0.0  # 调仓换手率（内部计算）
+        self.rebalance_count = 0  # 调仓换股次数：调仓日计算每只股票的换股次数总和，只要是卖出股票的交易都计算为1次换股
 
     def set_end_date(self, end_date):
         """更新该调仓周期的结束日期"""
@@ -35,6 +36,10 @@ class MultipleOrderPosition(object):
     def set_turnover_adjust_total_value(self, turnover_adjust_total_value):
         """在新的调仓日期调仓完毕后更新该调仓周期的调仓换手率之计算分子：每次调仓时卖出和调整过的股票市值"""
         self.turnover_adjust_total_value = turnover_adjust_total_value
+
+    def set_rebalance_count(self, rebalance_count):
+        """在新的调仓日期调仓完毕后更新该调仓周期的调仓换股次数"""
+        self.rebalance_count = rebalance_count
 
     def get_last_day_position_dict(self):
         """
