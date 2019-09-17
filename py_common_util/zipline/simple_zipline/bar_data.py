@@ -54,16 +54,21 @@ class BarData(object):
         """
         return True
 
-    def current(self, security_code_list):
+    def current(self, security_code_list, kline_date_list=None, select_column_clause=None, enable_print_sql=False):
         """
         获取当前bar的itemView信息，重试10次
         :param security_code_list, e.g. ["00700.HK","01800.HK]
-        :param kline_date: bar日期 e.g. "2019-07-24"
+        :param kline_date_list: bar日期 e.g. ["2019-07-24"]
+        :param select_column_clause e.g. "trade_date,security_code,hfq_close as close"
+        :param enable_print_sql 是否打印sql
         :return: bar_item e.g. {"security_code": "00700.HK", "close": 1.0, "kline_date": "2019-07-24"}
         """
         return self._daily_bar_to_pandas(cassandra_session=self.simple_cassandra_session,
+                                         stock_type=self._stock_type,
                                          security_code_list=security_code_list,
-                                         kline_date=self.current_kline_date)
+                                         kline_date_list=[self.current_kline_date] if kline_date_list is None else kline_date_list,
+                                         select_column_clause="trade_date,security_code,hfq_close as close" if select_column_clause is None else select_column_clause,
+                                         enable_print_sql=enable_print_sql)
 
     def calc_lot_size(self, security_code):
         """一手股票的股数, 美股为1，A股为100，港股中每手的股数不同"""
@@ -113,40 +118,58 @@ class BarData(object):
             return int(trade_lot / lot_size) * lot_size
 
     # @CommonUtils.print_exec_time
-    def _daily_bar_to_pandas(self, cassandra_session, security_code_list, kline_date) -> pd.DataFrame:
+    def _daily_bar_to_pandas(self,
+                             cassandra_session,
+                             stock_type,
+                             security_code_list,
+                             kline_date_list,
+                             select_column_clause="trade_date,security_code,hfq_close as close",
+                             enable_print_sql=False) -> pd.DataFrame:
         """
         参考：Get a Pandas DataFrame from a Cassandra query  https://gist.github.com/gioper86/b08b72d77c4e0aefa0137fc3655488dd
         https://stackoverflow.com/questions/41247345/python-read-cassandra-data-into-pandas
-        :return:
+        Getting null value for the field that has value when query result has many rows https://issues.apache.org/jira/browse/CASSANDRA-12431
+        :param select_column_sql e.g. "trade_date,security_code,hfq_close as close"
+        :param cassandra_session
+        :param stock_type e.g. "HK"|"US"
+        :param security_code_list e.g. ['00825.HK','00806.HK']
+        :param kline_date_list e.g. ['2018-01-03','2018-01-04']
+        :return: pd
         """
         table_name = ''
-        if self._stock_type == 'HK':
+        if stock_type == 'HK':
             table_name = 'nocode_quant_hk_screen_data'
-        elif self._stock_type == 'US':
+        elif stock_type == 'US':
             table_name = 'nocode_quant_us_screen_data'
         security_code_list_str = "'" + "','".join(security_code_list) + "'"
+        kline_date_list_str = "'" + "','".join(kline_date_list) + "'"
         filter_sql = """
-        select security_code, hfq_close as close 
-        from {0} 
-        where trade_date = {1}
-        and security_code in ({2})
-        """.format(table_name, "'" + kline_date + "'", security_code_list_str)
+        select {0} 
+        from {1} 
+        where trade_date in ({2})
+        and security_code in ({3})
+        """.format(select_column_clause, table_name, kline_date_list_str, security_code_list_str)
         # 手工调用cassandra to pandas
         try:
-            rows = cassandra_session.execute(filter_sql)
+            if enable_print_sql:
+                print(f"bar_data._daily_bar_to_pandas#filter_sql={filter_sql}")
+            rows = cassandra_session.execute(filter_sql, timeout=None)
+            trade_date_list = []
             security_list = []
             close_list = []
             for row in rows:
-                security_list.append(row[0])
-                close_list.append(row[1])
+                trade_date_list.append(row[0])
+                security_list.append(row[1])
+                close_list.append(row[2])
             data = {
-                'security_code': pd.Series(security_list),
-                'close': pd.Series(close_list),
+                "trade_date": pd.Series(trade_date_list),
+                "security_code": pd.Series(security_list),
+                "close": pd.Series(close_list),
             }
             return pd.DataFrame(data)
         except Exception as e:
-            print("bar_data#_daily_bar_to_pandas.filter_sql=%s" % filter_sql)
-            print("bar_data#_daily_bar_to_pandas error occurred: %s" % str(e))
+            print(f"bar_data#_daily_bar_to_pandas.filter_sql={filter_sql}")
+            print(f"bar_data#_daily_bar_to_pandas error occurred: {e}")
             traceback.print_exc()
         return None
 
