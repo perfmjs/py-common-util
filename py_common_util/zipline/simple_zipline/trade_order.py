@@ -68,7 +68,11 @@ class TradeOrder(object):
         keys = [key for key in self.position_dict.keys()]
         for security_code in keys:
             if security_code not in target_security_init_cash_list:
-                del self.position_dict[security_code]
+                self.remove_position(security_code)
+
+    def remove_position(self, security_code):
+        if security_code in self.position_dict:
+            del self.position_dict[security_code]
 
     def order_target(self,
                      security_code,
