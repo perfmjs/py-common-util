@@ -139,7 +139,9 @@ class TradeOrder(object):
         if amount > 0:
             if self.position_dict.get(security_code):
                 if self.position_dict.get(security_code).balance_cash < amount * limit_price:
-                    raise Exception("security_code=%s, amount=%s, limit_price=%s, balance_cash=%s, buy order balance cash is not enough!!!" % (security_code, str(amount), str(limit_price), str(self.position_dict.get(security_code).balance_cash)))
+                    pass
+                    # TODO self.position_dict.get(security_code).balance_cash 应为总持仓的total_balance_cash，先注释该validate
+                    # raise Exception("security_code=%s, amount=%s, limit_price=%s, balance_cash=%s, buy order balance cash is not enough!!!" % (security_code, str(amount), str(limit_price), str(self.position_dict.get(security_code).balance_cash)))
 
     def _asymmetric_round_price(self, price, prefer_round_down, tick_size=0.01, diff=0.95):
         """
