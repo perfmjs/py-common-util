@@ -54,7 +54,9 @@ $ twine check dist/
 ######（强制更新 $pip3 install --upgrade --no-deps --force-reinstall py-common-util --index https://pypi.mirrors.ustc.edu.cn/simple/ ） 
 
 $ pip3 search py-common-util
+
 ===注意====
+
 如果$pip3 install -U py-common-util有缓存旧的版本，则可在一台没有缓存的机器去下载最新版本就可以更新pypi上的缓存
 install from tar.gz file: $pip3 install -U  py-common-util-0.0.42.tar.gz
 ===========
