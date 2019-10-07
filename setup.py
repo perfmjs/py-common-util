@@ -53,6 +53,8 @@ setup(
     cmdclass={'install': install},
 )
 
-# commond:
-# 1. $python3 setup.py bdist_wheel
-# 2. $pip install dist/*.whl
+# it can also be built from the repository as follows.
+# 1. $git clone https://github.com/perfmjs/py-common-util
+# 2. $python setup.py bdist_wheel
+# 3. $pip install dist/*.whl
+# 4. $pip show -f hello
