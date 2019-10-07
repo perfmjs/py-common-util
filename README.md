@@ -47,6 +47,8 @@ install from tar.gz file: $pip3 install -U  py-common-util-0.0.42.tar.gz
 ===========
 其它项目安装py-common-util依赖 $pip3 install -U py-common-util
 或者$ easy_install py-common-util
+===========
+if CLion open this project reported Unknown Module Type Error, then fixed: Delete the ".idea/" in your project folder and then reopen your project using clion, you'll be glad to find everything works fine.
 
 #### 使用 py-common-util
 >>import py_common_util

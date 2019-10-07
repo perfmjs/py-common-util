@@ -106,3 +106,6 @@ venv.bak/
 # .idea, dist
 .idea
 dist
+
+# clion
+cmake-build-debug
