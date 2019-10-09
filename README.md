@@ -28,6 +28,7 @@ http://www.wbh-doc.com.s3.amazonaws.com/Python-OpenSource-Project-Developer-Guid
 1. 升级__version__(参考common/version.py)
 2. 查看打包文件清单MANIFEST.in是否包含应该包含的文件
 3. 删除build,dist,py_common_util.egg-info目录
+
 ~~ 
 
 （$python3 setup.py install (生成build,dist,egg-info目录)

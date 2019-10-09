@@ -53,7 +53,7 @@ setup(
     cmdclass={'install': install},
 )
 
-# it can also be built from the repository as follows.
+# you can also build source from the repository as follows.
 # 1. $git clone https://github.com/perfmjs/py-common-util
 # 2. $python setup.py bdist_wheel
 # 3. $pip install dist/*.whl

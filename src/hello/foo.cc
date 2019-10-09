@@ -1,4 +1,5 @@
 #include "foo.h"
+#include <iostream>
 
 int bar() {
     return 42;
