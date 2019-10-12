@@ -10,7 +10,8 @@ class EnhancedOrderedDict(OrderedDict):
     def subset(self, items=[]):
         """返回subset的deep copy对象"""
         if items is None or len(items) < 1:
-            return self.copy()
+            # return self.copy()  # 是否应该返回空的OrderedDic()，即EnhancedOrderedDict()
+            return EnhancedOrderedDict()
         all = super(EnhancedOrderedDict, self).items()
         # return type(self)((key, value) for (key, value) in all if key in items)
         copied_order_dict = EnhancedOrderedDict()

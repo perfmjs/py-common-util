@@ -5,7 +5,6 @@ import traceback
 from cassandra.cluster import Cluster
 from cassandra.policies import DCAwareRoundRobinPolicy
 from rediscluster import RedisCluster
-from py_common_util.common.common_utils import CommonUtils
 
 
 class BarData(object):
@@ -54,7 +53,7 @@ class BarData(object):
         """
         return True
 
-    def current(self, security_code_list, kline_date_list=None, select_column_clause=None, enable_print_sql=False):
+    def current(self, security_code_list, kline_date_list=None, select_column_clause=None, table_name=None, enable_print_sql=False):
         """
         获取当前bar的itemView信息，重试10次
         :param security_code_list, e.g. ["00700.HK","01800.HK]
@@ -67,7 +66,8 @@ class BarData(object):
                                          stock_type=self._stock_type,
                                          security_code_list=security_code_list,
                                          kline_date_list=[self.current_kline_date] if kline_date_list is None else kline_date_list,
-                                         select_column_clause="trade_date,security_code,hfq_close as close" if select_column_clause is None else select_column_clause,
+                                         select_column_clause="trade_date,security_code,hfq_close as close,close as bfq_close" if select_column_clause is None else select_column_clause,
+                                         table_name=table_name,
                                          enable_print_sql=enable_print_sql)
 
     def calc_lot_size(self, security_code):
@@ -117,13 +117,13 @@ class BarData(object):
         else:
             return int(trade_lot / lot_size) * lot_size
 
-    # @CommonUtils.print_exec_time
     def _daily_bar_to_pandas(self,
                              cassandra_session,
                              stock_type,
                              security_code_list,
                              kline_date_list,
-                             select_column_clause="trade_date,security_code,hfq_close as close",
+                             select_column_clause="trade_date,security_code,hfq_close as close,close as bfq_close",
+                             table_name="",
                              enable_print_sql=False) -> pd.DataFrame:
         """
         参考：Get a Pandas DataFrame from a Cassandra query  https://gist.github.com/gioper86/b08b72d77c4e0aefa0137fc3655488dd
@@ -136,11 +136,11 @@ class BarData(object):
         :param kline_date_list e.g. ['2018-01-03','2018-01-04']
         :return: pd
         """
-        table_name = ''
-        if stock_type == 'HK':
-            table_name = 'nocode_quant_hk_screen_data'
-        elif stock_type == 'US':
-            table_name = 'nocode_quant_us_screen_data'
+        if table_name is None or len(table_name) < 1:
+            if stock_type == 'HK':
+                table_name = 'nocode_quant_hk_screen_data'
+            elif stock_type == 'US':
+                table_name = 'nocode_quant_us_screen_data'
         security_code_list_str = "'" + "','".join(security_code_list) + "'"
         kline_date_list_str = "'" + "','".join(kline_date_list) + "'"
         filter_sql = """
@@ -157,14 +157,17 @@ class BarData(object):
             trade_date_list = []
             security_list = []
             close_list = []
+            bfq_close_list = []
             for row in rows:
                 trade_date_list.append(row[0])
                 security_list.append(row[1])
                 close_list.append(row[2])
+                bfq_close_list.append(row[3])
             data = {
                 "trade_date": pd.Series(trade_date_list),
                 "security_code": pd.Series(security_list),
                 "close": pd.Series(close_list),
+                "bfq_close": pd.Series(bfq_close_list)
             }
             return pd.DataFrame(data)
         except Exception as e:
