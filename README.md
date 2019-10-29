@@ -35,7 +35,9 @@ http://www.wbh-doc.com.s3.amazonaws.com/Python-OpenSource-Project-Developer-Guid
 ###### 或者创建全版本通用的wheel安装包
 ###### 安装twine $pip3 install twine**
  
-构建 $ python3 setup.py sdist or $python setup.py sdist bdist_wheel --universal
+构建 $ python3 setup.py sdist
+######or $ python3 setup.py sdist bdist_wheel --universal
+###### then install to local: $ pip3 install -U ./dist/skydl-*-py2.py3-none-any.whl
  
 ######$ twine check dist/
 ######注册包(可能不需要) $ twine register dist/py-common-util-0.0.41.tar.gz -r pypi
