@@ -149,6 +149,7 @@ class BarData(object):
         where trade_date in ({2})
         and security_code in ({3})
         """.format(select_column_clause, table_name, kline_date_list_str, security_code_list_str)
+        columns = ["trade_date", "security_code", "close", "bfq_close"]
         # 手工调用cassandra to pandas
         try:
             if enable_print_sql:
@@ -169,10 +170,10 @@ class BarData(object):
                 "close": pd.Series(close_list),
                 "bfq_close": pd.Series(bfq_close_list)
             }
-            return pd.DataFrame(data)
+            return pd.DataFrame(data, columns=columns)
         except Exception as e:
             print(f"bar_data#_daily_bar_to_pandas.filter_sql={filter_sql}")
             print(f"bar_data#_daily_bar_to_pandas error occurred: {e}")
             traceback.print_exc()
-        return None
+        return pd.DataFrame(columns=columns)
 
