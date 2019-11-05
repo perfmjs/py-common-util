@@ -82,27 +82,6 @@ class CommonUtils:
         return _all_cap_re.sub(r"\1_\2", s1).lower()
 
     @staticmethod
-    def print_exec_time(func):
-        """
-        装饰器：print execution time
-        usage:
-        @print_exec_time
-        def add(x, y=10):
-            return x + y
-        if __name__ == '__main__':
-        add(1, 2) -> "func: add(), time taken: 0.000002 seconds"
-        :param func:
-        :return:
-        """
-        def decorator_func(*args, **kwargs):
-            from time import time
-            before_time = time()
-            rv = func(*args, **kwargs)
-            print('print_exec_time->func: '+func.__name__+'()' + ', time taken: {:.3f} seconds'.format(time() - before_time))
-            return rv
-        return decorator_func
-
-    @staticmethod
     def deepcopy(x, memo=None, _nil=[]):
         """深拷贝，该方法执行比较耗时间"""
         return copy.deepcopy(x, memo, _nil)

@@ -8,6 +8,7 @@ def print_exec_time(func):
     """
     装饰器：print execution time
     usage:
+    @staticmethod
     @print_exec_time
     def add(x, y=10):
         return x + y

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from py_common_util.common.annotations import print_exec_time
 from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
 from py_common_util.zipline.default_strategy import DefaultStrategy
-from py_common_util.common.common_utils import CommonUtils
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 from empyrical import cum_returns, annual_return, sharpe_ratio, max_drawdown, alpha, beta
@@ -112,7 +112,7 @@ class DualMovingAverageStrategy(DefaultStrategy):
             self.log.info(msg)
         plt.show()
 
-    @CommonUtils.print_exec_time
+    @print_exec_time
     def run_algorithm(self):
         # data = self.ts.proapi.stock_basic(exchange='', list_status='L', fields='ts_code,symbol,name,area,industry,list_date')
         # self.log.info(data)

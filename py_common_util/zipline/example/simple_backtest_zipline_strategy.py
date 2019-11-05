@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from py_common_util.common.annotations import print_exec_time
 from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
 from py_common_util.zipline.default_strategy import DefaultStrategy
-from py_common_util.common.common_utils import CommonUtils
 from empyrical import cum_returns, annual_return, sharpe_ratio, max_drawdown, alpha, beta
 import pandas as pd
 from collections import OrderedDict
@@ -70,7 +70,7 @@ class NocodeBacktestZiplineStrategy(DefaultStrategy):
         self.log.info("analyze...")
         pass
 
-    @CommonUtils.print_exec_time
+    @print_exec_time
     def run_algorithm(self):
         us_calendar = get_calendar("XNYS")
         cn_calendar = ChineseStockCalendar(data_frequency="daily")

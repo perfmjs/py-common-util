@@ -4,13 +4,13 @@ import pandas as pd
 import sys
 import traceback
 import random
-from py_common_util.common.common_utils import CommonUtils
-from py_common_util.zipline.simple_zipline.trade_order import TradeOrder
-from py_common_util.zipline.simple_zipline.bar_data import BarData
+from py_common_util.common.annotations import print_exec_time
+from py_common_util.simple_zipline.trade_order import TradeOrder
+from py_common_util.simple_zipline.bar_data import BarData
 from py_common_util.common.enhanced_ordered_dict import EnhancedOrderedDict
-from py_common_util.zipline.simple_zipline.trade_context import TradeContext
+from py_common_util.simple_zipline.trade_context import TradeContext
 from six import with_metaclass
-from logbook import Logger, StreamHandler, FileHandler
+from logbook import Logger, StreamHandler
 
 
 class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
@@ -132,7 +132,7 @@ class SimpleAbstractStrategy(with_metaclass(ABCMeta)):
             traceback.print_exc()
         return None
 
-    @CommonUtils.print_exec_time
+    @print_exec_time
     def process(self):
         return self.run_algorithm()
 

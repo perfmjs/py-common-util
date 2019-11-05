@@ -4,7 +4,7 @@ from sys import float_info
 import numpy as np
 import math
 from py_common_util.common.enhanced_ordered_dict import EnhancedOrderedDict
-from py_common_util.zipline.simple_zipline.position import Position
+from py_common_util.simple_zipline.position import Position
 
 
 class TradeOrder(object):
