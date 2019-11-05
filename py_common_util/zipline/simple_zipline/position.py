@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from py_common_util.common.enhanced_ordered_dict import EnhancedOrderedDict
 
 
@@ -80,3 +81,6 @@ class Position(object):
             "last_price": self.last_price
             # "market_position": self.market_position
         }
+
+    def to_pretty_string(self):
+        return json.dumps(self.to_dict(), sort_keys=False, indent=4)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
+import json
 from py_common_util.common.enhanced_ordered_dict import EnhancedOrderedDict
 
 
@@ -82,11 +83,12 @@ class MultipleOrderPosition(object):
         Creates a dictionary representing the state of this position.
         Returns a dict object of the form:
         """
-        position_dict_str = ""
+        position_dict_json = {}
         for trade_date in self.position_dict:
-            position_dict_str += trade_date + ":"
+            position_detail_dict_json = []
             for security_code in self.position_dict.get(trade_date):
-                position_dict_str += str(self.position_dict.get(trade_date).get(security_code).to_dict()) + ","
+                position_detail_dict_json.append(self.position_dict.get(trade_date).get(security_code).to_dict())
+            position_dict_json[trade_date] = position_detail_dict_json
         return {
             'start_date': self.start_date,
             'end_date': self.end_date,
@@ -95,5 +97,8 @@ class MultipleOrderPosition(object):
             "total_value": self.total_value,
             "turnover_adjust_total_value": self.turnover_adjust_total_value,
             "turnover_ratio": self.turnover_ratio,
-            "position_dict": position_dict_str
+            "position_dict": position_dict_json
         }
+
+    def to_pretty_string(self):
+        return json.dumps(self.to_dict(), sort_keys=False, indent=4)
