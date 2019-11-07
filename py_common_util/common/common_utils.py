@@ -2,6 +2,7 @@
 import csv
 import copy
 import math
+from pathlib import Path
 
 
 class CommonUtils:
@@ -101,5 +102,9 @@ class CommonUtils:
             return format(float(x)*times, format_args)
         except:
             return str(x)
+
+    @staticmethod
+    def get_user_home_path():
+        return str(Path.home())
 
 

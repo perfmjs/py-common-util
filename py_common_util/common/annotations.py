@@ -2,6 +2,8 @@
 """
 定义一些常用的装饰器
 """
+import warnings
+from inspect import isfunction, isclass
 
 
 def print_exec_time(func):
@@ -84,6 +86,27 @@ def DeveloperAPI(obj):
     return obj
 
 
+def Deprecated(func):
+    """This is a decorator which can be used to mark functions
+    as deprecated. It will result in a warning being emmitted
+    when the function is used."""
+    def newFunc(*args, **kwargs):
+        if isfunction(func):
+            func_type = "function"
+        elif isclass(func):
+            func_type = "class"
+        else:
+            func_type = "type"
+        warnings.simplefilter('always', DeprecationWarning)  # turn off filter
+        warnings.warn(f"Call to deprecated {func_type}: {func.__name__}.", category=DeprecationWarning, stacklevel=2)
+        warnings.simplefilter('default', DeprecationWarning)  # reset filter
+        return func(*args, **kwargs)
+    newFunc.__name__ = func.__name__
+    newFunc.__doc__ = func.__doc__
+    newFunc.__dict__.update(func.__dict__)
+    return newFunc
+
+
 if __name__ == '__main__':
     class A(object):
         def __init__(self):
@@ -98,4 +121,15 @@ if __name__ == '__main__':
         @Override(A)
         def _init(self):
             pass
+
     B()._init()
+
+    @Deprecated
+    class SomeClass:
+        @Deprecated
+        def some_old_method(self, x, y):
+            return x + y
+
+    print(SomeClass().some_old_method(33, 44))
+
+
