@@ -43,10 +43,12 @@ class TradeOrder(object):
         self._commission = None
         self._min_move = 0.0  # TODO default value is 0.01， 目前让其为0
         self._position_dict = EnhancedOrderedDict()  # 每只股票代码->1个Position对象
+        self._should_calculate_order = True  # 下单时是否要对交易价格和交易股数的小数点进行四舍五入处理
 
-    def do_init(self, bar_data, commission):
+    def do_init(self, bar_data, commission, should_calculate_order=True):
         self._bar_data = bar_data
         self._commission = commission
+        self._should_calculate_order = should_calculate_order
 
     def reinit_position_dict(self, target_security_init_cash_list):
         """
@@ -115,7 +117,10 @@ class TradeOrder(object):
         except Exception as e:
             print("order validation error：%s" % str(e))
             return 0, 0
-        amount, handled_limit_price = self._calculate_order(security_code, amount, limit_price, stop_price, style)
+        if self._should_calculate_order:
+            amount, handled_limit_price = self._calculate_order(security_code, amount, limit_price, stop_price, style)
+        else:
+            handled_limit_price = limit_price
         if self.position_dict.get(security_code):
             self.position_dict.get(security_code).update(amount, handled_limit_price, self.min_move, self.commission, market_position=1)
         # for security_code in self.position_dict.keys():
