@@ -117,10 +117,7 @@ class TradeOrder(object):
         except Exception as e:
             print("order validation error：%s" % str(e))
             return 0, 0
-        if self._should_calculate_order:
-            amount, handled_limit_price = self._calculate_order(security_code, amount, limit_price, stop_price, style)
-        else:
-            handled_limit_price = limit_price
+        amount, handled_limit_price = self._calculate_order(security_code, amount, limit_price, stop_price, style)
         if self.position_dict.get(security_code):
             self.position_dict.get(security_code).update(amount, handled_limit_price, self.min_move, self.commission, market_position=1)
         # for security_code in self.position_dict.keys():
@@ -182,6 +179,8 @@ class TradeOrder(object):
         return rounded
 
     def _calculate_order(self, security_code, amount, limit_price=None, stop_price=None, style=None):
+        if not self._should_calculate_order:
+            return amount, limit_price
         amount = self._round_order(amount)
         is_buy = amount > 0
         handled_limit_price = self._asymmetric_round_price(limit_price, is_buy)
