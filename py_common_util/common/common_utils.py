@@ -3,6 +3,7 @@ import csv
 import copy
 import math
 from pathlib import Path
+from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
 
 
 class CommonUtils:
@@ -88,18 +89,22 @@ class CommonUtils:
         return copy.deepcopy(x, memo, _nil)
 
     @staticmethod
-    def format_number(x, times=1, format_args="0.2f"):
+    def format_number(x, times=1, format_args="0.2f", use_round_down=True):
         """
-        格式化数字输出, e.g. 12.3456-> "12.34"
+        格式化数字输出, e.g. 12.3456->"12.34"
         :param x: 数字 e.g. 12.3456
         :param times: 乘以的倍数，方便%输出
-        :param format_args: e.g. "0.2f" 保留小数点后2位输出
-        :return: "12.34" 如果要to float类型就用: float(format_number(12.3456, 100))
+        :param format_args: e.g. "0.2f" 保留小数点后2位输出 e.g. 123.465->"123.47"
+        :param use_round_down True直接截取, False四舍五入 e.g. False: 99.999989->'100.00', 99.11789->'99.12'
+        :return: "12.34" 如果要to float类型就用: float(format_number(12.3456, 100)), 注意float("100.0000")->100.0
         """
         if x is None or math.isnan(x):
             return "0.00"
         try:
-            return format(float(x)*times, format_args)
+            # 最原始的四舍五入的方法：return format(float(x)*times, format_args)
+            # 用Decimal精确截取小数点后2位小数，也可以四舍五入。e.g. 123.465->"123.46"
+            rounding = ROUND_DOWN if use_round_down else ROUND_HALF_UP
+            return str(Decimal(float(x) * times).quantize(Decimal(format(0, format_args)), rounding=rounding))
         except:
             return str(x)
 
