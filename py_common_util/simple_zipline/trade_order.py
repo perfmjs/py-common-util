@@ -155,7 +155,6 @@ class TradeOrder(object):
             When .05 below to .95 above a specified decimal place, use it.
         If prefer_round_down == False:
             When .95 below to .05 above a specified decimal place, use it.
-
         In math-speak:
         If prefer_round_down: [<X-1>.0095, X.0195) -> round to X.01.
         If not prefer_round_down: (<X-1>.0005, X.0105] -> round to X.01.
