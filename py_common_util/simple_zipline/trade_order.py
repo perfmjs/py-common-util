@@ -159,6 +159,12 @@ class TradeOrder(object):
         In math-speak:
         If prefer_round_down: [<X-1>.0095, X.0195) -> round to X.01.
         If not prefer_round_down: (<X-1>.0005, X.0105] -> round to X.01.
+        ====
+        待完善逻辑：
+        美股下单价格处理逻辑：if  price>=1 then 对股价四舍五入保留2位小数点 else 对股价四舍五入保留4位小数点
+        港股下单价格处理逻辑: 对股价四舍五入保留3位小数点
+        A股下单价格处理逻辑: 对股价四舍五入保留2位小数点
+        其它交易品种不对下单股价做四舍五入处理
         """
         precision = self._number_of_decimal_places(tick_size)
         multiplier = int(tick_size * (10 ** precision))
