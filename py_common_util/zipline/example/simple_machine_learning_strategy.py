@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
+import numpy as np
 import pandas as pd
-from zipline.api import order_target_percent, record, symbol
 import pytz
 import zipline
 from datetime import datetime
-from contrib_lib.quant.utils.chinese_stock_calendar import ChineseStockCalendar
+from collections import deque
+from collections import OrderedDict
+from zipline.api import order_target_percent, record, symbol
+from py_common_util.zipline.default_strategy import DefaultStrategy
+from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
 # Use a random forest classifier. More here: http://scikit-learn.org/stable/user_guide.html
 from sklearn.ensemble import RandomForestClassifier
-from collections import deque
-import numpy as np
-from collections import OrderedDict
-from contrib_lib.quant.zipline.default_strategy import DefaultStrategy
 
 
 class SimpleMachineLearningStrategy(DefaultStrategy):
@@ -65,15 +65,15 @@ class SimpleMachineLearningStrategy(DefaultStrategy):
         start_time = datetime(2018, 1, 2, 9, 31, 0, 0, pytz.utc)
         end_time = datetime(2018, 2, 4, 16, 0, 0, 0, pytz.utc)
         zipline.run_algorithm(start=start_time,
-                                     end=end_time,
-                                     initialize=self.initialize,
-                                     capital_base=100000,
-                                     handle_data=self.handle_data,
-                                     before_trading_start=self.before_trading_start,
-                                     data_frequency='minute',
-                                     data=self.prepare_data(),
-                                     trading_calendar=ChineseStockCalendar(),
-                                     analyze=self.analyze)
+                             end=end_time,
+                             initialize=self.initialize,
+                             capital_base=100000,
+                             handle_data=self.handle_data,
+                             before_trading_start=self.before_trading_start,
+                             data_frequency='minute',
+                             data=self.prepare_data(),
+                             trading_calendar=ChineseStockCalendar(),
+                             analyze=self.analyze)
 
 
 if __name__ == '__main__':

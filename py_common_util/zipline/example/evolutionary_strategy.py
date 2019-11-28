@@ -11,18 +11,17 @@
 # shortlong determines whether we go short or long on upswings/downswings
 # For each strategy "in testing", search through stocks that fit the criteria and take action
 # Using the strategy that performed the best, make trades
+import pytz
 import random
-from collections import deque
 import zipline
-from zipline.finance import commission, slippage
-from zipline.api import order_target, record, order_target_percent
-
 import pandas as pd
 from collections import OrderedDict
-import pytz
+from collections import deque
 from datetime import datetime
-from contrib_lib.quant.utils.chinese_stock_calendar import ChineseStockCalendar
-from contrib_lib.quant.zipline.default_strategy import DefaultStrategy
+from zipline.finance import commission, slippage
+from zipline.api import order_target, record, order_target_percent
+from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
+from py_common_util.zipline.default_strategy import DefaultStrategy
 
 
 class EvolutionaryStrategy(DefaultStrategy):

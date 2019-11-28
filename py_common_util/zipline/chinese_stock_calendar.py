@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+import pytz
+from pytz import timezone
 from datetime import time, datetime
 from trading_calendars import TradingCalendar
 from zipline.utils.memoize import lazyval
 from pandas.tseries.offsets import CustomBusinessDay
-import pytz
-from pytz import timezone
 
 
 class ChineseStockCalendar(TradingCalendar):

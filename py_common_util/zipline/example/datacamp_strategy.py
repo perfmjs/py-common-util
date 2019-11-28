@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from contrib.quant.zipline.default_strategy import DefaultStrategy
-from contrib.quant.utils.chinese_stock_calendar import ChineseStockCalendar
 import datetime
+from py_common_util.zipline.default_strategy import DefaultStrategy
+from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
 
 
 class DataCampStrategy(DefaultStrategy):

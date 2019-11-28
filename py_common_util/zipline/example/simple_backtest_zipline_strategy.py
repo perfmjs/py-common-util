@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+import pandas as pd
+from collections import OrderedDict
+from trading_calendars import get_calendar
 from py_common_util.common.annotations import print_exec_time
 from py_common_util.zipline.chinese_stock_calendar import ChineseStockCalendar
 from py_common_util.zipline.default_strategy import DefaultStrategy
 from empyrical import cum_returns, annual_return, sharpe_ratio, max_drawdown, alpha, beta
-import pandas as pd
-from collections import OrderedDict
-from trading_calendars import get_calendar
 
 
 class NocodeBacktestZiplineStrategy(DefaultStrategy):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
 import tushare as ts
 from logbook import Logger, StreamHandler, FileHandler
-import sys
 
 
 class TushareDataset:

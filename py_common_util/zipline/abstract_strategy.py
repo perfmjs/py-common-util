@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from abc import abstractmethod, ABCMeta
-from six import with_metaclass
-# import quandl
+import sys
 import zipline as zl
 import pandas as pd
 import numpy as np
-import sys
+from six import with_metaclass
+from abc import abstractmethod, ABCMeta
 from logbook import Logger, StreamHandler, FileHandler
 # from skydl.zipline.tushare_dataset import TushareDataset
 
