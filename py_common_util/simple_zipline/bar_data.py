@@ -100,8 +100,8 @@ class BarData(object):
         :param commision: e.g. 0.001
         :return:
         """
-        # return self._calc_trade_lot(cash / (price + min_move + price*commision), lot_size) //应该和position计算balance_cash计算逻辑一致
-        return self._calc_trade_lot(cash / (price + min_move + commision), lot_size)
+        # return self._calc_trade_lot(cash / (price + min_move + commision), lot_size) # 这里是zipline的逻辑
+        return self._calc_trade_lot(cash / (price + min_move + price*commision), lot_size) # 这里改为和position计算balance_cash的逻辑一致
 
     def _calc_trade_lot(self, trade_lot:int, lot_size:int=1):
         """
