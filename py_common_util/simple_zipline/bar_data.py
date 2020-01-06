@@ -27,7 +27,7 @@ class BarData(object):
         self._cassandra_session = None
 
     def do_init(self, stock_type, cassandra_host_port, cassandra_key_space, redis_conn_nodes):
-        self._stock_type = stock_type  # e.g. 'HK', 'US'
+        self._stock_type = stock_type  # e.g. 'HK', 'US', 'ASHARE'
         # init cassandra session
         def pandas_factory(colnames, rows):
             return pd.DataFrame(rows, columns=colnames)
@@ -132,7 +132,7 @@ class BarData(object):
         Getting null value for the field that has value when query result has many rows https://issues.apache.org/jira/browse/CASSANDRA-12431
         :param select_column_sql e.g. "trade_date,security_code,hfq_close as close"
         :param cassandra_session
-        :param stock_type e.g. "HK"|"US"
+        :param stock_type e.g. "HK"|"US"|"ASHARE"
         :param security_code_list e.g. ['00825.HK','00806.HK']
         :param kline_date_list e.g. ['2018-01-03','2018-01-04']
         :return: pd
@@ -142,6 +142,8 @@ class BarData(object):
                 table_name = 'nocode_quant_hk_screen_data'
             elif stock_type == 'US':
                 table_name = 'nocode_quant_us_screen_data'
+            elif stock_type == 'ASHARE':
+                table_name = 'nocode_quant_ashare_screen_data'
         security_code_list_str = "'" + "','".join(security_code_list) + "'"
         kline_date_list_str = "'" + "','".join(kline_date_list) + "'"
         filter_sql = """
