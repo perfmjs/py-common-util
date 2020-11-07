@@ -38,7 +38,7 @@ class LanguageModel(object):
         and softmax.  Set to False for testing.
 
     The LSTM cell is controlled by the 'lstm' key in options
-    Here is an example:
+    Here is an examples:
 
      'lstm': {
       'cell_clip': 5,

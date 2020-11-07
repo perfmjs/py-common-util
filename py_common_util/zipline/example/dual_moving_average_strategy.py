@@ -44,7 +44,7 @@ class DualMovingAverageStrategy(DefaultStrategy):
         context.sym = self.zipline.api.symbol('SPY')
         context.i = 0
         # Explicitly set the commission/slippage to the "old" value until we can
-        # rebuild example data.
+        # rebuild examples data.
         # github.com/quantopian/zipline/blob/master/tests/resources/
         # rebuild_example_data#L105
         context.set_commission(self.zipline.finance.commission.PerShare(cost=.0075, min_trade_cost=1.0))

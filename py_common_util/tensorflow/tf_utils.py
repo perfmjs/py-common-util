@@ -110,7 +110,7 @@ class TFUtils:
         """
         Convert class labels from scalars to one-hot vectors.
         labels_dense e.g. np.asarray([5, 0, 3, 2, 4, 9, 6, 7, 2, 1, 0, 0, 1, 4, 5, 2, 5, 6, 7, 8])
-        as example: dense_to_one_hot(np.asarray([8]), 10)
+        as examples: dense_to_one_hot(np.asarray([8]), 10)
         ref to: tensorflow/contrib/learn/python/learn/datasets/mnist.py#dense_to_one_hot()
         """
         num_labels = labels_dense.shape[0]
@@ -122,7 +122,7 @@ class TFUtils:
     @staticmethod
     def one_hot_to_dense(labels_dense_one_hot=[]):
         """
-        for example:
+        for examples:
         one_hot_to_dense([ 0.  1.  0.  0.  0.  0.  0.  0.  0.  0.])
         result index is: [1], and the result shuld be: index+1
         one_hot_to_dense([ 0.  0.  0.  1.  0.  0.  0.  0.  0.  0.])

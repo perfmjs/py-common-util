@@ -1,6 +1,6 @@
 #########################
-#国内加速镜像1 $pip3  install --index http://mirrors.sohu.com/python/ torch
-#国内加速镜像2 $pip3  install --index https://pypi.mirrors.ustc.edu.cn/simple/ torch
+#国内加速镜像1 $pip3  install --i http://mirrors.sohu.com/python/ torch
+#国内加速镜像2 $pip3  install --i https://pypi.mirrors.ustc.edu.cn/simple/ torch
 #sudo pip install -U allennlp
 #pip3 install -U nltk
 #pip3 install -U jupyter
@@ -47,6 +47,7 @@ requests>=2.18.4
 ##zipline>=1.3.0（不需要安装zipline用自主开发的simple_zipline包代替)
 #需要手动安装 trading-calendars>=1.8.1
 #需要手动安装 empyrical>=0.5.0
+#需要手动安装因子分析框架 alphalens>=0.3.6  statsmodels>=0.11.1
 #需要手动安装 logbook
 #redis cluster: redis和redis-py-cluster冲突，可能需要先uninstall已安装高版本的redis, 然后再安装redis-py-cluster, 最后再$pip install -U redis==3.0.1
 #需要手动安装 redis-py-cluster==2.0.0
